@@ -153,8 +153,8 @@ The screenshot is explicitly included to see latency effect of a singular connec
 it being not as dramatically faster shows that the culprit is mostly CDP being a very
 chatty protocol, requiring being close to the target browser.
 
-For clients in `asia-south1-c`, Limrun sandbox runs **5x faster compared to no sandbox** and
-about **2x faster compared to Daytona sandbox in EU**.
+For clients in `asia-south1-c`, Limrun sandbox runs **5x faster than no sandbox** and
+about **1.5-2x faster than Daytona** sandbox in EU.
 
 | Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
 | --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
@@ -163,7 +163,7 @@ about **2x faster compared to Daytona sandbox in EU**.
 | No Sandbox      | GCP asia-south1-c | Limrun eu-north1               | 2.8s       | 29.2s        |
 
 For clients in the same region as Android, Limrun sandbox is **3x faster than no sandbox** and
-**4x faster than Daytona sandbox in EU**.
+**4x faster than Daytona** sandbox in EU.
 
 | Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
 | --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
