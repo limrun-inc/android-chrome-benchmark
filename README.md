@@ -138,14 +138,15 @@ npm run lim-sandbox
 ```
 
 `cdp.screenshot` time is about `1.0s`
-`cdp.commands` time is about `5.8s`
+`cdp.commands` time is about `5.9s`
 
 ### Results
 
-Our goal was to test for a specific scenario and we're clearly seeing a gain about ~5x
+Our goal was to test for a specific scenario and we're clearly seeing a **gain about ~5x**
 in total time for CDP-based test. The screenshot is explicitly included to see latency
-effect of a singular connection and it being not dramatically faster shows that the
-culprit is mostly CDP being a very chatty protocol.
+effect of a singular connection and it being not as dramatically faster shows that the
+culprit is mostly CDP being a very chatty protocol, requiring being close to the target
+browser.
 
 We see this dynamic across different combinations but the improvements are not as
 dramatic. And since then we deployed `as-south1` region so our users there are now
@@ -154,8 +155,6 @@ getting the best raw latency as well.
 | Setup       | Client Region | Android Region |Screenshot | CDP Commands |
 | ----------- | ---------- | ------------ |
 | No Sandbox  | GCP asia-south1-c | Limrun eu-north1 | 2.8s       | 29.2s        |
-| Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.8s         |
+| Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.9s         |
 | No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s        |
 | Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s       |
-| No Sandbox  | GCP asia-south1-c | Limrun as-south1 | X       | X        |
-| Lim Sandbox | GCP asia-south1-c | Limrun as-south1 | X       | X        |
