@@ -1,0 +1,23 @@
+{
+  "name": "android-chrome-benchmark",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "lim-sandbox": "tsx lim-sandbox.ts",
+    "non-sandbox": "tsx lim-nonsandbox.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@limrun/api": "^0.18.2",
+    "playwright": "1.56.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
