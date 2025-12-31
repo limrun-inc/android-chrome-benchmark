@@ -9,13 +9,12 @@ Android-Playwright server in a sandbox close to our Android instances for a
 subset of end users connecting their agent from their laptops in India.
 
 We've seen 5x improvement in latency, attributing it mostly to how Chrome Devtools
-Protocol (CDP) is chatty that the impact of latency is multipled and running
-Android-Playwright server on our bare metal infra.
+Protocol (CDP) being very chatty that the impact of latency is multipled and
+us running the sandbox on bare-metal infra.
 
-Note that we used to have only `eu-north1` and `us-west1` regions at the time,
-we now have `as-south1` and it's automatically selected depending where you
-run the benchmark so you need to select `us-west1` or `eu-north1` explicitly
-while the client is in India/Singapore region to replicate the benchmarks.
+> Note that we used to have only `eu-north1` and `us-west1` regions at the time,
+> we now have private `as-south1` as well to make it even smoother for all users
+> across the globe.
 
 In the results section, we have different combinations too but our main goal
 was to improve for end users in Southeast Asia region who must run their
@@ -29,8 +28,7 @@ just setup noise.
 
 * Limrun account to provision Android instance.
 * Google Cloud Account
-  * Used to provision an environment in Southeast Asia region to mimic the end
-    users there.
+  * Used to provision VMs to mimic end user location.
 
 ### Setup
 
@@ -100,7 +98,8 @@ cd android-chrome-benchmark
 npm install
 ```
 
-Prepare an API key from [Limrun Console](https://console.limrun.com)
+Prepare an API key from [Limrun Console](https://console.limrun.com). You'll get 2 hours
+of free usage by default. Ping at muvaf(at)limrun.com for more.
 
 ```bash
 export LIM_API_KEY=lim_....
@@ -111,13 +110,12 @@ export LIM_API_KEY=lim_....
 #### No Sandbox
 
 Run the non-sandbox test, e.g. set up an ADB tunnel for Playwright to talk to the Android
-instance and run as usual where the Android-Playwright server is running locally. This
-requires existence of `adb`.
+instance and run as usual where the Android-Playwright server is running locally.
 
 The CDP commands go from `asia-south2-c` VM to our `eu-north1` region in this case.
 
 ```bash
-# Explicitly set region to prevent auto-selection.
+# Explicitly set region to prevent proximity-based selection.
 export LIMRUN_REGION=eu-north1
 npm run non-sandbox
 ```
@@ -136,7 +134,7 @@ The CDP communication happens in-cluster at Limrun infrastructure, running on ba
 servers.
 
 ```bash
-# Explicitly set region to prevent auto-selection.
+# Explicitly set region to prevent proximity-based selection.
 export LIMRUN_REGION=eu-north1
 npm run lim-sandbox
 ```
@@ -146,27 +144,35 @@ npm run lim-sandbox
 
 ### Results
 
-Our goal was to test for a specific scenario and we're clearly seeing a **gain about ~5x**
-in total time for CDP-based test. The screenshot is explicitly included to see latency
-effect of a singular connection and it being not as dramatically faster shows that the
-culprit is mostly CDP being a very chatty protocol, requiring being close to the target
-browser.
+Our goal was to test for a specific scenario where the client is in India and connected
+to our Android from their laptop where they run Playwright tests compared to us running
+Playwright's Android server close to Android and we're clearly seeing a **gain about ~5x**
+in total time for CDP-based actions.
 
-We see this dynamic across different combinations but the improvements are not as
-dramatic. And since then we deployed `as-south1` region so our users there are now
-getting the best raw latency as well.
+The screenshot is explicitly included to see latency effect of a singular connection and
+it being not as dramatically faster shows that the culprit is mostly CDP being a very
+chatty protocol, requiring being close to the target browser.
 
-| Setup       | Client Region | Android Region |Screenshot | CDP Commands |
-| ----------- | ---------- | ------------ |
-| No Sandbox  | GCP asia-south1-c | Limrun eu-north1 | 2.8s       | 29.2s        |
-| Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.9s         |
-| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s      |
-| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s      |
-| Daytona Sandbox | GCP asia-south1-c  | Daytona EU -> Limrun eu-north1 | 1.7s       | 10.1      |
-| Daytona Sandbox | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.2s       | 8.2s      |
+For clients in `asia-south1-c`, Limrun sandbox runs **5x faster compared to no sandbox** and
+about **2x faster compared to Daytona sandbox in EU**.
+
+| Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
+| --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
+| Limrun Sandbox  | GCP asia-south1-c | Limrun eu-north1               | 1.0s       | 5.9s         |
+| Daytona Sandbox | GCP asia-south1-c | Daytona EU -> Limrun eu-north1 | 1.7s       | 10.1         |
+| No Sandbox      | GCP asia-south1-c | Limrun eu-north1               | 2.8s       | 29.2s        |
+
+For clients in the same region as Android, Limrun sandbox is **3x faster than no sandbox** and
+**4x faster than Daytona sandbox in EU**.
+
+| Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
+| --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
+| Limrun Sandbox  | GCP europe-north1 | Limrun eu-north1               | 202.9ms    | 1.9s         |
+| No Sandbox      | GCP europe-north1 | Limrun eu-north1               | 546.2ms    | 5.8s         |
+| Daytona Sandbox | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.2s       | 8.2s         |
 
 
-#### External Sandboxes
+#### External Sandbox Setup
 
 This section describes running the tests with external sandbox providers. Note that this
 wasn't an option for us when we performed this work and still isn't, but there was a thread
