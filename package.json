@@ -6,13 +6,17 @@
   "main": "index.ts",
   "scripts": {
     "lim-sandbox": "tsx lim-sandbox.ts",
-    "non-sandbox": "tsx lim-nonsandbox.ts"
+    "non-sandbox": "tsx lim-nonsandbox.ts",
+    "external-sandbox": "tsx external-sandbox.ts",
+    "daytona-sandbox": "tsx daytona-sandbox.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@daytonaio/sdk": "^0.128.1",
     "@limrun/api": "^0.18.2",
+    "dotenv": "^17.2.3",
     "playwright": "1.56.1"
   },
   "devDependencies": {

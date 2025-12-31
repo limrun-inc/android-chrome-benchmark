@@ -1,12 +1,16 @@
 # Limrun Android-Playwright Sandbox Test
 
+At [Limrun](https://lim.run), we provide iOS & Android simulators running
+on bare metal, rendered and streamed with real GPUs over WebRTC for your AI
+agents.
+
 This repo was internally used to measure the high level benefits of running
-Android-Playwright server close to our Android instances for end users in
-South Asia.
+Android-Playwright server in a sandbox close to our Android instances for a
+subset of end users connecting their agent from their laptops in India.
 
 We've seen 5x improvement in latency, attributing it mostly to how Chrome Devtools
 Protocol (CDP) is chatty that the impact of latency is multipled and running
-Android-Playwright server on bare metal.
+Android-Playwright server on our bare metal infra.
 
 Note that we used to have only `eu-north1` and `us-west1` regions at the time,
 we now have `as-south1` and it's automatically selected depending where you
@@ -156,5 +160,23 @@ getting the best raw latency as well.
 | ----------- | ---------- | ------------ |
 | No Sandbox  | GCP asia-south1-c | Limrun eu-north1 | 2.8s       | 29.2s        |
 | Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.9s         |
-| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s        |
-| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s       |
+| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s      |
+| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s      |
+| Daytona Sandbox | My local | Daytona EU -> Limrun eu-north1 | 1.3s       | 8.5s      |
+| Daytona Sandbox | GCP asia-south1-c  | Daytona EU -> Limrun eu-north1 | 1.3s       | 8.5s      |
+
+
+#### External Sandboxes
+
+This section describes running the tests with external sandbox providers. Note that this
+wasn't an option for us when we performed this work and still isn't, but there was a thread
+in X, so here we go.
+
+This image connects to Android instance and spins up Android-Plawyright server similar to
+what we're doing in our Limrun sandbox.
+
+
+```bash
+# Make sure it targets linux/amd64
+docker build --platform=linux/amd64 . -t ghcr.io/limrun-inc/android-chrome-benchmark:v0.1.0 --push
+```
