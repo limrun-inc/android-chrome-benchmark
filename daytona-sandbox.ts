@@ -21,8 +21,8 @@ const sandbox = await daytona.create({
   ephemeral: true,
   public: true,
   resources: {
-    cpu: 4,
-    memory: 8,
+    cpu: 1,
+    memory: 1,
   },
   image: "ghcr.io/limrun-inc/android-chrome-benchmark:v0.3.0",
   envVars: {

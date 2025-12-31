@@ -158,8 +158,8 @@ about **2x faster compared to Daytona sandbox in EU**.
 
 | Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
 | --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
-| Limrun Sandbox  | GCP asia-south1-c | Limrun eu-north1               | 1.0s       | 5.9s         |
-| Daytona Sandbox | GCP asia-south1-c | Daytona EU -> Limrun eu-north1 | 1.7s       | 10.1         |
+| Limrun Sandbox (0.5 CPU, 512MB)  | GCP asia-south1-c | Limrun eu-north1               | 1.0s       | 5.9s         |
+| Daytona Sandbox (1cpu, 1GB) | GCP asia-south1-c | Daytona EU -> Limrun eu-north1 | 1.7s       | 10.1         |
 | No Sandbox      | GCP asia-south1-c | Limrun eu-north1               | 2.8s       | 29.2s        |
 
 For clients in the same region as Android, Limrun sandbox is **3x faster than no sandbox** and
@@ -167,9 +167,9 @@ For clients in the same region as Android, Limrun sandbox is **3x faster than no
 
 | Setup           | Client Region     | Android Region                 |Screenshot  | CDP Commands |
 | --------------- | ----------------- | ------------------------------ | ---------- | ------------ |
-| Limrun Sandbox  | GCP europe-north1 | Limrun eu-north1               | 202.9ms    | 1.9s         |
+| Limrun Sandbox (0.5 CPU, 512MB)  | GCP europe-north1 | Limrun eu-north1               | 202.9ms    | 1.9s         |
 | No Sandbox      | GCP europe-north1 | Limrun eu-north1               | 546.2ms    | 5.8s         |
-| Daytona Sandbox | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.2s       | 8.2s         |
+| Daytona Sandbox (1cpu, 1GB) | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.9s       | 10.1s         |
 
 
 #### External Sandbox Setup
