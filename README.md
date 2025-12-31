@@ -1,4 +1,4 @@
-# Limrun Android-Playwright Sandbox Benchmark
+# Limrun Android-Playwright Sandbox Test
 
 This repo was internally used to measure the high level benefits of running
 Android-Playwright server close to our Android instances for end users in
@@ -16,6 +16,10 @@ while the client is in India/Singapore region to replicate the benchmarks.
 In the results section, we have different combinations too but our main goal
 was to improve for end users in Southeast Asia region who must run their
 automation code locally.
+
+Disclaimer: This is not a real benchmark. We just wanted to have a high level
+idea on where the bottleneck was, e.g. if it is close then it's probably
+just setup noise.
 
 ## Pre-requisites
 
@@ -37,7 +41,8 @@ region will have even worse latency.
 ```bash
 # Creates a 4 vCPU, 16GB memory instance in asia-south2-c with public IP.
 GCP_PROJECT=staging-469409
-gcloud compute instances create india-vm \
+NAME=india-vm-1
+gcloud compute instances create ${NAME} \
     --project=${GCP_PROJECT} \
     --zone=asia-south2-c \
     --machine-type=e2-standard-4 \
@@ -59,14 +64,24 @@ SSH into the instance.
 
 ```bash
 GCP_PROJECT=staging-469409
-gcloud compute ssh --zone "asia-south2-c" "india-vm" --project "${GCP_PROJECT}"
+NAME=india-vm-1
+gcloud compute ssh --zone "asia-south2-c" "${NAME}" --project "${GCP_PROJECT}"
 ```
 
 Install NodeJS 24.
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
-sudo apt install nodejs -y
+sudo apt install -y git unzip nodejs
+```
+
+Install Android Platform Tools for `adb`.
+
+```bash
+curl -Lo platform-tools-latest-linux.zip https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+unzip platform-tools-latest-linux.zip
+export PATH=$PATH:$(pwd)/platform-tools
+which adb
 ```
 
 #### Prepare the repo
@@ -90,7 +105,8 @@ export LIM_API_KEY=lim_....
 #### No Sandbox
 
 Run the non-sandbox test, e.g. set up an ADB tunnel for Playwright to talk to the Android
-instance and run as usual where the Android-Playwright server is running locally.
+instance and run as usual where the Android-Playwright server is running locally. This
+requires existence of `adb`.
 
 The CDP commands go from `asia-south2-c` VM to our `eu-north1` region in this case.
 
@@ -98,13 +114,14 @@ The CDP commands go from `asia-south2-c` VM to our `eu-north1` region in this ca
 npm run non-sandbox
 ```
 
-You'll see that total `cdp.commands` time is about X.
+`cdp.screenshot` time is about `2.8s`
+`cdp.commands` time is about `29.2s`
 
 #### Android-Playwright Server in Lim Sandbox
 
 Run the lim-sandbox test where we enable Android-Playwright server sandbox in our
 request to Limrun API and let Playwright code connect to that server directly. The
-ADB tunnel is set up at Limrun infrastructure so this test doesn't need to set that
+same ADB tunnel is set up at Limrun infrastructure so this test doesn't need to set that
 up.
 
 The CDP communication happens in-cluster at Limrun infrastructure, running on bare metal
@@ -114,6 +131,21 @@ servers.
 npm run lim-sandbox
 ```
 
-You'll see that total `cdp.commands` time is about X.
+`cdp.screenshot` time is about `1.0s`
+`cdp.commands` time is about `5.8s`
 
 ### Results
+
+Our goal was to test for a specific scenario and we're clearly seeing a gain about ~5x
+in total time for CDP-based test. The screenshot is explicitly included to see latency
+effect of a singular connection and it being not dramatically faster shows that the
+culprit is mostly CDP being a very chatty protocol.
+
+We see this dynamic across different combinations but the improvements are not as
+dramatic. And since then we deployed `as-south1` region so our users there are now
+getting the best raw latency as well.
+
+| Setup       | Screenshot | CDP Commands |
+| ----------- | ---------- | ------------ |
+| No Sandbox (as->eu)  | 2.8s       | 29.2s        |
+| Lim Sandbox (as->eu) | 1.0s       | 5.8s         |
