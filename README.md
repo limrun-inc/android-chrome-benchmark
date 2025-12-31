@@ -162,8 +162,8 @@ getting the best raw latency as well.
 | Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.9s         |
 | No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s      |
 | Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s      |
-| Daytona Sandbox | My local | Daytona EU -> Limrun eu-north1 | 1.3s       | 8.5s      |
-| Daytona Sandbox | GCP asia-south1-c  | Daytona EU -> Limrun eu-north1 | 1.3s       | 8.5s      |
+| Daytona Sandbox | GCP asia-south1-c  | Daytona EU -> Limrun eu-north1 | 1.7s       | 10.1      |
+| Daytona Sandbox | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.2s       | 8.2s      |
 
 
 #### External Sandboxes
@@ -175,8 +175,18 @@ in X, so here we go.
 This image connects to Android instance and spins up Android-Plawyright server similar to
 what we're doing in our Limrun sandbox.
 
-
 ```bash
 # Make sure it targets linux/amd64
 docker build --platform=linux/amd64 . -t ghcr.io/limrun-inc/android-chrome-benchmark:v0.1.0 --push
+```
+
+You'll need Daytona API key.
+```bash
+export DAYTONA_API_KEY=dtn_...
+```
+
+This will create a Daytona sandbox and start the Android-Playwright server, wait for it to be ready
+and connect to execute the steps.
+```bash
+npm run daytona-sandbox
 ```
