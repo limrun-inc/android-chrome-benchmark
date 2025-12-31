@@ -38,7 +38,6 @@ const instance = await limrun.androidInstances.create({
     ],
   },
   wait: true,
-  reuseIfExists: true,
 });
 console.timeEnd('create');
 console.log(`Instance created: ${instance.metadata.id}`);

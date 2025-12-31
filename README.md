@@ -39,12 +39,16 @@ Note that we get a Standard network tier instance, an end-user laptop in that
 region will have even worse latency.
 
 ```bash
+export GCP_PROJECT=staging-469409
+export VM_NAME=india-vm-1
+export ZONE=asia-south2-c
+```
+
+```bash
 # Creates a 4 vCPU, 16GB memory instance in asia-south2-c with public IP.
-GCP_PROJECT=staging-469409
-NAME=india-vm-1
-gcloud compute instances create ${NAME} \
+gcloud compute instances create ${VM_NAME} \
     --project=${GCP_PROJECT} \
-    --zone=asia-south2-c \
+    --zone=${ZONE} \
     --machine-type=e2-standard-4 \
     --network-interface=network-tier=STANDARD,stack-type=IPV4_ONLY,subnet=default \
     --metadata=enable-oslogin=true \
@@ -63,9 +67,7 @@ gcloud compute instances create ${NAME} \
 SSH into the instance.
 
 ```bash
-GCP_PROJECT=staging-469409
-NAME=india-vm-1
-gcloud compute ssh --zone "asia-south2-c" "${NAME}" --project "${GCP_PROJECT}"
+gcloud compute ssh --zone "${ZONE}" "${VM_NAME}" --project "${GCP_PROJECT}"
 ```
 
 Install NodeJS 24.
@@ -145,7 +147,11 @@ We see this dynamic across different combinations but the improvements are not a
 dramatic. And since then we deployed `as-south1` region so our users there are now
 getting the best raw latency as well.
 
-| Setup       | Screenshot | CDP Commands |
+| Setup       | Client Region | Android Region |Screenshot | CDP Commands |
 | ----------- | ---------- | ------------ |
-| No Sandbox (as->eu)  | 2.8s       | 29.2s        |
-| Lim Sandbox (as->eu) | 1.0s       | 5.8s         |
+| No Sandbox  | GCP asia-south1-c | Limrun eu-north1 | 2.8s       | 29.2s        |
+| Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.8s         |
+| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 676.2ms       | 5.8s        |
+| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | X       | X       |
+| No Sandbox  | GCP asia-south1-c | Limrun as-south1 | X       | X        |
+| Lim Sandbox | GCP asia-south1-c | Limrun as-south1 | X       | X        |
