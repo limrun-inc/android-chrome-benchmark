@@ -113,6 +113,8 @@ requires existence of `adb`.
 The CDP commands go from `asia-south2-c` VM to our `eu-north1` region in this case.
 
 ```bash
+# Explicitly set region to prevent auto-selection.
+export LIMRUN_REGION=eu-north1
 npm run non-sandbox
 ```
 
@@ -130,6 +132,8 @@ The CDP communication happens in-cluster at Limrun infrastructure, running on ba
 servers.
 
 ```bash
+# Explicitly set region to prevent auto-selection.
+export LIMRUN_REGION=eu-north1
 npm run lim-sandbox
 ```
 
@@ -151,7 +155,7 @@ getting the best raw latency as well.
 | ----------- | ---------- | ------------ |
 | No Sandbox  | GCP asia-south1-c | Limrun eu-north1 | 2.8s       | 29.2s        |
 | Lim Sandbox | GCP asia-south1-c | Limrun eu-north1 | 1.0s       | 5.8s         |
-| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 676.2ms       | 5.8s        |
-| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | X       | X       |
+| No Sandbox  | GCP europe-north1 | Limrun eu-north1 | 546.2ms       | 5.8s        |
+| Lim Sandbox | GCP europe-north1 | Limrun eu-north1 | 202.9ms       | 1.9s       |
 | No Sandbox  | GCP asia-south1-c | Limrun as-south1 | X       | X        |
 | Lim Sandbox | GCP asia-south1-c | Limrun as-south1 | X       | X        |

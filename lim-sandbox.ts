@@ -20,7 +20,7 @@ const instance = await limrun.androidInstances.create({
     },
   },
   spec: {
-    region: 'eu-north1',
+    region: process.env["LIMRUN_REGION"],
     initialAssets: [
       {
         kind: 'Configuration',
