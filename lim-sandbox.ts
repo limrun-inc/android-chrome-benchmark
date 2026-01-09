@@ -64,9 +64,7 @@ const device = await android.connect(
 );
 console.timeEnd('connect');
 
-console.time('run');
 await run(limClient, device);
-console.timeEnd('run');
 
 await device.close();
 console.log('Session closed');

@@ -71,7 +71,7 @@ const sandbox = await daytona.create({
     cpu: 1,
     memory: 1,
   },
-  image: "ghcr.io/limrun-inc/android-chrome-benchmark:v0.4.0",
+  image: "ghcr.io/limrun-inc/android-chrome-benchmark:v0.4.1",
   envVars: {
     LIMRUN_INSTANCE_ENDPOINT_WS_URL: instance.status.endpointWebSocketUrl!,
     LIMRUN_INSTANCE_ADB_WS_URL: instance.status.adbWebSocketUrl!,
@@ -124,9 +124,7 @@ const device = await android.connect(playwrightAndroidUrl.url.replaceAll('https:
 });
 console.timeEnd('connect');
 
-console.time('run');
 await run(limClient, device);
-console.timeEnd('run');
 await device.close();
 console.log('Session closed');
 limClient.disconnect();

@@ -1,55 +1,6 @@
 import { InstanceClient } from "@limrun/api";
 import { AndroidDevice } from 'playwright';
-
-interface Measurement {
-    name: string;
-    duration: number;
-}
-
-class BenchmarkTimer {
-    private measurements: Measurement[] = [];
-    private startTimes: Map<string, number> = new Map();
-
-    start(name: string): void {
-        this.startTimes.set(name, performance.now());
-    }
-
-    end(name: string): number {
-        const startTime = this.startTimes.get(name);
-        if (startTime === undefined) {
-            throw new Error(`Timer "${name}" was never started`);
-        }
-        const duration = performance.now() - startTime;
-        this.measurements.push({ name, duration });
-        this.startTimes.delete(name);
-        console.log(`${name}: ${duration.toFixed(2)}ms`);
-        return duration;
-    }
-
-    async measure<T>(name: string, fn: () => Promise<T>): Promise<T> {
-        this.start(name);
-        const result = await fn();
-        this.end(name);
-        return result;
-    }
-
-    printTable(): void {
-        console.log('\n' + '='.repeat(55));
-        console.log('                 BENCHMARK RESULTS');
-        console.log('='.repeat(55));
-        
-        const maxNameLen = Math.max(...this.measurements.map(m => m.name.length), 30);
-        
-        console.log(`${'Metric'.padEnd(maxNameLen)}  ${'Time (ms)'.padStart(12)}`);
-        console.log('-'.repeat(55));
-        
-        for (const m of this.measurements) {
-            console.log(`${m.name.padEnd(maxNameLen)}  ${m.duration.toFixed(2).padStart(12)}`);
-        }
-        
-        console.log('='.repeat(55));
-    }
-}
+import { BenchmarkTimer } from './timer';
 
 export async function run(limClient: InstanceClient, device: AndroidDevice) {
     const timer = new BenchmarkTimer();
@@ -60,10 +11,10 @@ export async function run(limClient: InstanceClient, device: AndroidDevice) {
     await device.shell('am force-stop com.android.chrome');
     console.log('Chrome is ready');
 
+    timer.start('total');
     const browser = await device.launchBrowser();
     console.log('Browser launched');
 
-    timer.start('cdp.commands.total');
     const page = await browser.newPage();
     await page.goto('https://github.com/microsoft/playwright');
     await page.waitForURL('https://github.com/microsoft/playwright');
@@ -87,7 +38,6 @@ export async function run(limClient: InstanceClient, device: AndroidDevice) {
     await timer.measure('cdp.screenshot', async () => {
         await page.screenshot({ path: 'screenshot.png' });
     });
-    timer.end('cdp.commands.total');
 
 
     // --- CDP accessibility + DOM snapshot benchmarks ---
@@ -121,6 +71,7 @@ export async function run(limClient: InstanceClient, device: AndroidDevice) {
             includePaintOrder: true,
         });
     });
+    timer.end('total');
 
     const domDocCount = domSnapshot?.documents?.length ?? 0;
     const domNodeCount = domSnapshot?.documents?.[0]?.nodes?.nodeName?.length ?? 0;
