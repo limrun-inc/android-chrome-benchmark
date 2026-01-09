@@ -42,8 +42,8 @@ region will have even worse latency.
 
 ```bash
 export GCP_PROJECT=staging-469409
-export VM_NAME=india-vm-1
-export ZONE=asia-south2-c
+export VM_NAME=us-vm-1
+export ZONE=us-west2-a
 ```
 
 ```bash
@@ -170,6 +170,26 @@ For clients in the same region as Android, Limrun sandbox is **3x faster than no
 | Limrun Sandbox (0.5 CPU, 512MB)  | GCP europe-north1 | Limrun eu-north1               | 202.9ms    | 1.9s         |
 | No Sandbox      | GCP europe-north1 | Limrun eu-north1               | 546.2ms    | 5.8s         |
 | Daytona Sandbox (1cpu, 1GB) | GCP europe-north1 | Daytona EU -> Limrun eu-north1 | 1.9s       | 10.1s         |
+
+
+When clients are in `asia-south1-c` and are using our new `as-south1` region:
+
+> See raw logs in [asia-south1-c_as-south1.txt](./runs/asia-south1-c_as-south1.txt)
+
+| Setup           | Client Region     | Android Region                 |Screenshot | `getFullAXTree` | CDP Commands |
+| --------------- | ----------------- | ------------------------------ | ---------- | --- | ------------ |
+| Limrun Sandbox (0.5 CPU, 512MB)  | GCP asia-south1-c | Limrun as-south1   | 457.4ms |   122.3ms   | 4.0s         |
+| No Sandbox      | GCP asia-south1-c | Limrun as-south1           | 1.2s  | 157.9ms  | 13.9s   |
+
+When clients are in `us-west2-a` and are using our `us-west1` region:
+
+> See raw logs in [us-west1-a_us-west1.txt](./runs/us-west1-a_us-west1.txt)
+
+| Setup           | Client Region     | Android Region                 |Screenshot | `getFullAXTree` | CDP Commands |
+| --------------- | ----------------- | ------------------------------ | ---------- | ------------ | ----- |
+| Limrun Sandbox (0.5 CPU, 512MB)  | GCP us-west2-a | Limrun us-west1   | 547.4ms  |  96.5ms    | 6.4s         |
+| No Sandbox      | GCP us-west2-a | Limrun us-west1           | 540.3ms  | 91.6ms  | 8.2s         |
+
 
 
 #### External Sandbox Setup

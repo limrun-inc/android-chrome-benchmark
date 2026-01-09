@@ -1,0 +1,100 @@
+$ time curl https://limserver-1.limrun.net
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+
+real    0m0.091s
+user    0m0.057s
+sys     0m0.005s
+
+
+$ npm run lim-sandbox
+
+> android-chrome-benchmark@1.0.0 lim-sandbox
+> tsx lim-sandbox.ts
+
+create: 1.062s
+Instance created: android_uswa_01kegxe45be8qrd04wp6vr2fct
+Connecting to instance: android_uswa_01kegxe45be8qrd04wp6vr2fct
+connect: 78.905ms
+Chrome is ready
+Browser launched
+GitHub - microsoft/playwright: Playwright is a framework for Web Testing and Automation. It allows testing Chromium, Firefox and WebKit with a single API.
+Page title logged
+Links on page: 336
+click.github: 178.54ms
+cdp.screenshot: 543.44ms
+--- CDP Accessibility / DOMSnapshot benchmarks ---
+cdp.Accessibility.getFullAXTree: 96.54ms
+AX nodes returned: 315
+cdp.DOMSnapshot.captureSnapshot: 91.50ms
+total: 6595.87ms
+DOMSnapshot documents: 1
+DOMSnapshot nodes: 2916
+--- CDP benchmarks complete ---
+limClient.screenshot: 228.55ms
+
+=======================================================
+                 BENCHMARK RESULTS
+=======================================================
+Metric                              Time (ms)
+-------------------------------------------------------
+click.github                           178.54
+cdp.screenshot                         543.44
+cdp.Accessibility.getFullAXTree         96.54
+cdp.DOMSnapshot.captureSnapshot         91.50
+total                                 6595.87
+limClient.screenshot                   228.55
+=======================================================
+Session closed
+LimClient disconnected
+Instance deleted
+
+
+$ npm run non-sandbox
+
+> android-chrome-benchmark@1.0.0 non-sandbox
+> tsx lim-nonsandbox.ts
+
+create: 752.899ms
+Instance created: android_uswa_01kegx9hsye6stm1ghm4qk83s5
+Setting up adb tunnel
+startAdbTunnel: 3.250s
+Connecting to instance: android_uswa_01kegx9hsye6stm1ghm4qk83s5
+connect: 106.99ms
+Chrome is ready
+Browser launched
+GitHub - microsoft/playwright: Playwright is a framework for Web Testing and Automation. It allows testing Chromium, Firefox and WebKit with a single API.
+Page title logged
+Links on page: 336
+click.github: 540.36ms
+cdp.screenshot: 954.98ms
+--- CDP Accessibility / DOMSnapshot benchmarks ---
+cdp.Accessibility.getFullAXTree: 91.63ms
+AX nodes returned: 315
+cdp.DOMSnapshot.captureSnapshot: 89.41ms
+total: 8232.59ms
+DOMSnapshot documents: 1
+DOMSnapshot nodes: 2916
+--- CDP benchmarks complete ---
+limClient.screenshot: 225.39ms
+
+=======================================================
+                 BENCHMARK RESULTS
+=======================================================
+Metric                              Time (ms)
+-------------------------------------------------------
+click.github                           540.36
+cdp.screenshot                         954.98
+cdp.Accessibility.getFullAXTree         91.63
+cdp.DOMSnapshot.captureSnapshot         89.41
+total                                 8232.59
+limClient.screenshot                   225.39
+=======================================================
+Session closed
+Client disconnected
+Instance deleted
